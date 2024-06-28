@@ -9,7 +9,7 @@ app.use(express.json());
 
 mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db', {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
 })
   .then(()=>{
     console.log("Connected to DB")
