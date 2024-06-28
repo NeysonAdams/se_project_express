@@ -17,7 +17,12 @@ const createItem = (req, res) => {
 };
 
 const deleteItem = (req, res) => {
-  ClothingItem.findByIdAndDelete(req.params.id).orFail()
+  ClothingItem.findByIdAndDelete(req.params.id)
+  .orFail(() => {
+    const error = new Error('User not found');
+    error.name = 'DocumentNotFoundError';
+    throw error;
+  })
     .then(()=> res.status(200).send({ message: 'Item deleted successfully' }))
     .catch(error => errorHandeling(error.message, res));
 };
@@ -29,7 +34,11 @@ const likeItem = (req, res) =>{
     { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
     { new: true },
   )
-  .orFail()
+  .orFail(() => {
+    const error = new Error('User not found');
+    error.name = 'DocumentNotFoundError';
+    throw error;
+  })
   .then(item => res.status(200).send(item))
   .catch(error => errorHandeling(error.message, res));
 }
@@ -40,7 +49,11 @@ const dislikeItem = (req, res) => {
     { $pull: { likes: req.user._id } }, // remove _id from the array
     { new: true },
   )
-  .orFail()
+  .orFail(() => {
+    const error = new Error('User not found');
+    error.name = 'DocumentNotFoundError';
+    throw error;
+  })
   .then(item => res.status(200).send(item))
   .catch(error => errorHandeling(error.message, res));
 }
