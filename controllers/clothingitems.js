@@ -18,7 +18,7 @@ const createItem = (req, res) => {
 
 const deleteItem = (req, res) => {
   ClothingItem.findByIdAndDelete(req.params.id).orFail()
-    .then(item => res.status(200).send({ message: 'Item deleted successfully' }))
+    .then(()=> res.status(200).send({ message: 'Item deleted successfully' }))
     .catch(error => errorHandeling(error.message, res));
 };
 

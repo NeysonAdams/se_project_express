@@ -1,30 +1,24 @@
 
-const sendError = (code, message, res)=> res.status(code).send({ message: message });
+const sendError = (code, msg, res)=> res.status(code).send({ message: msg });
 
 const errorHandeling = (error, res) =>
 {
-  console.log(error);
-  console.log(error.name);
-  console.log(error.message);
+  let error_code = 500;
   if (error.name === 'DocumentNotFoundError') {
-    return sendError(404, error.message, res);
+    error_code = 404;
   }else if (error.name === 'CastError') {
-    return sendError(400, error.message, res);
+    error_code = 400;
   }
-  return sendError(500, error.message? error.message: error, res);
+  return sendError(error_code, error.message? error.message: error, res);
 }
 
 const errorCreationHandeling = (error, res) =>
 {
-  console.log(error);
+  let error_code = 500;
   if(error.name === "ValidationError"){
-    return sendError(404, error.message? error.message: error, res);;
+    error_code = 404;
   }
-  else if (error.name === "TypeError")
-  {
-    return sendError(404, error.message? error.message: error, res);;
-  }
-  return sendError(500, error.message? error.message: error, res);
+  return sendError(error_code, error.message? error.message: error, res);
 }
 
 module.exports = { sendError, errorCreationHandeling, errorHandeling};

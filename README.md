@@ -14,11 +14,11 @@ WTWR is a web application designed to help users decide what to wear based on th
 - Error Handling: Proper error messages and status codes for invalid requests or server errors.
 
 ## Technologies Used
-###- Backend:
+### - Backend:
   - Node.js
   - Express.js
   - Mongoose (MongoDB)
-###- Tools:
+### - Tools:
   - Postman (for API testing)
   - MongoDB Atlas (for database hosting)
 
