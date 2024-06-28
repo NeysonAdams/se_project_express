@@ -1,11 +1,12 @@
 const { sendError, errorCreationHandeling, errorHandeling} = require("../utils/errors")
+const { DEFAULT } = require("../utils/errorConstants");
 const ClothingItem = require("../models/clothingitems");
 
 
 const getItems = (req, res) => {
   ClothingItem.find()
-    .then(items => res.status(200).send(items))
-    .catch(error => sendError(500, error, res));
+    .then(items => res.send(items))
+    .catch(error => sendError(DEFAULT, error, res));
 };
 
 const createItem = (req, res) => {
@@ -19,7 +20,7 @@ const createItem = (req, res) => {
 const deleteItem = (req, res) => {
   ClothingItem.findByIdAndDelete(req.params.id)
   .orFail()
-    .then(()=> res.status(200).send({ message: 'Item deleted successfully' }))
+    .then(()=> res.send({ message: 'Item deleted successfully' }))
     .catch(error => errorHandeling(error, res));
 };
 
@@ -31,7 +32,7 @@ const likeItem = (req, res) =>{
     { new: true },
   )
   .orFail()
-  .then(item => res.status(200).send(item))
+  .then(item => res.send(item))
   .catch(error => errorHandeling(error, res));
 }
 
@@ -42,7 +43,7 @@ const dislikeItem = (req, res) => {
     { new: true },
   )
   .orFail()
-  .then(item => res.status(200).send(item))
+  .then(item => res.send(item))
   .catch(error => errorHandeling(error, res));
 }
 

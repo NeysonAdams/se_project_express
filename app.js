@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const mainRouter = require("./routes/index");
 
+const { NOT_FOUND } = require("../utils/errorConstants");
+
 const app = express();
 const {PORT = 3001} = process.env
 
@@ -27,7 +29,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db', {
 app.use("/", mainRouter);
 
 app.use((req, res, next) => {
-  res.status(404).json({ message: 'Requested resource not found' });
+  res.status(NOT_FOUND).send({ message: 'Requested resource not found' });
   next();
 });
 app.listen(PORT, ()=>{
