@@ -7,9 +7,9 @@ const errorHandeling = (error, res) =>
   console.log(error.name);
   let errorCode = 500;
   if (error.name === 'DocumentNotFoundError') {
-    errorCode = 400;
-  }else if (error.name === 'CastError') {
     errorCode = 404;
+  }else if (error.name === 'CastError') {
+    errorCode = 400;
   }
   return sendError(errorCode, error.message, res);
 }
@@ -20,7 +20,7 @@ const errorCreationHandeling = (error, res) =>
   console.log(error.name);
   let errorCode = 500;
   if(error.name === "ValidationError"){
-    errorCode = 404;
+    errorCode = 400;
   }
   return sendError(errorCode, error.message, res);
 }
