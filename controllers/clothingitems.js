@@ -5,7 +5,7 @@ const ClothingItem = require("../models/clothingitems");
 const getItems = (req, res) => {
   ClothingItem.find()
     .then(items => res.status(200).send(items))
-    .catch(error => sendError(500, error.message, res));
+    .catch(error => sendError(500, error, res));
 };
 
 const createItem = (req, res) => {
@@ -13,18 +13,14 @@ const createItem = (req, res) => {
   const owner = req.user._id;
   ClothingItem.create({ name, weather, imageUrl, owner })
     .then(item => res.status(201).send(item))
-    .catch(error => errorCreationHandeling(error.message, res));
+    .catch(error => errorCreationHandeling(error, res));
 };
 
 const deleteItem = (req, res) => {
   ClothingItem.findByIdAndDelete(req.params.id)
-  .orFail(() => {
-    const error = new Error('User not found');
-    error.name = 'DocumentNotFoundError';
-    throw error;
-  })
+  .orFail()
     .then(()=> res.status(200).send({ message: 'Item deleted successfully' }))
-    .catch(error => errorHandeling(error.message, res));
+    .catch(error => errorHandeling(error, res));
 };
 
 const likeItem = (req, res) =>{
@@ -34,13 +30,9 @@ const likeItem = (req, res) =>{
     { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
     { new: true },
   )
-  .orFail(() => {
-    const error = new Error('User not found');
-    error.name = 'DocumentNotFoundError';
-    throw error;
-  })
+  .orFail()
   .then(item => res.status(200).send(item))
-  .catch(error => errorHandeling(error.message, res));
+  .catch(error => errorHandeling(error, res));
 }
 
 const dislikeItem = (req, res) => {
@@ -49,13 +41,9 @@ const dislikeItem = (req, res) => {
     { $pull: { likes: req.user._id } }, // remove _id from the array
     { new: true },
   )
-  .orFail(() => {
-    const error = new Error('User not found');
-    error.name = 'DocumentNotFoundError';
-    throw error;
-  })
+  .orFail()
   .then(item => res.status(200).send(item))
-  .catch(error => errorHandeling(error.message, res));
+  .catch(error => errorHandeling(error, res));
 }
 
 module.exports = { getItems, createItem, deleteItem, likeItem, dislikeItem };

@@ -5,20 +5,16 @@ const getUsers = (req, res)=>{
   console.log("Get Users");
   User.find()
     .then((users)=>res.status(200).send(users))
-    .catch(error => sendError(500, error.message, res));
+    .catch(error => sendError(500, error, res));
 }
 
 const getUser = (req, res) => {
 
   console.log(`Get user by id :${req.params.userId}`);
   User.findById(req.params.userId)
-    .orFail(() => {
-      const error = new Error('User not found');
-      error.name = 'DocumentNotFoundError';
-      throw error;
-    })
+    .orFail()
     .then((user)=>res.status(200).send(user))
-    .catch(error => errorHandeling(error.message, res));
+    .catch(error => errorHandeling(error, res));
 }
 
 const createUser = (req, res) => {
@@ -29,7 +25,7 @@ const createUser = (req, res) => {
 
     User.create({ name, avatar })
       .then(user => res.status(201).send(user))
-      .catch(error => errorCreationHandeling(error.message, res));
+      .catch(error => errorCreationHandeling(error, res));
   }
 };
 
