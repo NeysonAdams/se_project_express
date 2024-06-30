@@ -6,7 +6,7 @@ const ClothingItem = require("../models/clothingitems");
 const getItems = (req, res) => {
   ClothingItem.find()
     .then(items => res.send(items))
-    .catch(error => sendError(DEFAULT, error, res));
+    .catch(error => sendError(DEFAULT, FORBIDDEN, error, res));
 };
 
 const createItem = (req, res) => {
@@ -18,8 +18,15 @@ const createItem = (req, res) => {
 };
 
 const deleteItem = (req, res) => {
-  ClothingItem.findByIdAndDelete(req.params.id)
+
+  ClothingItem.findById(req.params.id)
   .orFail()
+    .then(item=>{
+      if(!item.owner.equals(req.user._id))
+        return sendError(FORBIDDEN, { message: 'Forbidden: You do not have permission to delete this item' }, res)
+
+      return ClothingItem.findByIdAndDelete(req.params.id)
+    })
     .then(()=> res.send({ message: 'Item deleted successfully' }))
     .catch(error => errorHandeling(error, res));
 };

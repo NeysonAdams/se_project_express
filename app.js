@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const mainRouter = require("./routes/index");
 
 const { NOT_FOUND } = require("./utils/errorConstants");
@@ -8,6 +9,7 @@ const app = express();
 const {PORT = 3001} = process.env
 
 app.use(express.json());
+app.use(cors());
 
 mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db', {
   useNewUrlParser: true,
@@ -17,14 +19,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db', {
     console.log("Connected to DB")
   })
   .catch(console.error);
-
-  app.use((req, res, next) => {
-    req.user = {
-      _id: '667e809e67253b24075117f7'// paste the _id of the test user created in the previous step
-    };
-    next();
-  });
-
 
 app.use("/", mainRouter);
 
