@@ -23,11 +23,11 @@ const deleteItem = (req, res) => {
   .orFail()
     .then(item=>{
       if(!item.owner.equals(req.user._id))
-        return sendError(FORBIDDEN, { message: 'Forbidden: You do not have permission to delete this item' }, res)
+        return sendError(FORBIDDEN, 'Forbidden: You do not have permission to delete this item', res)
 
       return ClothingItem.findByIdAndDelete(req.params.id)
+        .then(()=> res.send({ message: 'Item deleted successfully' }))
     })
-    .then(()=> res.send({ message: 'Item deleted successfully' }))
     .catch(error => errorHandeling(error, res));
 };
 
