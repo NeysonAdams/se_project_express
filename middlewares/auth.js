@@ -8,7 +8,7 @@ const auth = (req, res, next)=>{
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return sendError(UNATHORIZED, { message: 'Authorization required'} , res);
+    return sendError(UNATHORIZED,'Authorization required' , res);
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -17,11 +17,11 @@ const auth = (req, res, next)=>{
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    return sendError(UNATHORIZED, { message: 'Invalid token' }, res);
+    return sendError(UNATHORIZED, 'Invalid token', res);
   }
 
   req.user = payload;
-  next();
+  return next();
 }
 
 module.exports = auth;

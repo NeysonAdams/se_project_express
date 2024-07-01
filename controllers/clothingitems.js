@@ -1,12 +1,12 @@
 const { sendError, errorCreationHandeling, errorHandeling} = require("../utils/errors")
-const { DEFAULT } = require("../utils/errorConstants");
+const { DEFAULT,FORBIDDEN } = require("../utils/errorConstants");
 const ClothingItem = require("../models/clothingitems");
 
 
 const getItems = (req, res) => {
   ClothingItem.find()
     .then(items => res.send(items))
-    .catch(error => sendError(DEFAULT, FORBIDDEN, error, res));
+    .catch(error => sendError(DEFAULT, error, res));
 };
 
 const createItem = (req, res) => {

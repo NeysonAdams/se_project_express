@@ -1,26 +1,13 @@
-const User = require('../models/users');
-const { DEFAULT, UNATHORIZED, BAD_REQUEST } = require("../utils/errorConstants");
-const { sendError, errorCreationHandeling, errorHandeling} = require("../utils/errors")
-const { JWT_SECRET } = require('../utils/config');
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const User = require('../models/users');
+const { BAD_REQUEST } = require("../utils/errorConstants");
+const { sendError, errorCreationHandeling, errorHandeling} = require("../utils/errors")
+const { JWT_SECRET } = require('../utils/config');
 
-/*const getUsers = (req, res)=>{
-  console.log("Get Users");
-  User.find()
-    .then((users)=>res.send(users))
-    .catch(error => sendError(DEFAULT, error, res));
-}
 
-const getUser = (req, res) => {
-
-  console.log(`Get user by id :${req.params.userId}`);
-  User.findById(req.params.userId)
-    .orFail()
-    .then((user)=>res.send(user))
-    .catch(error => errorHandeling(error, res));
-}*/
 
 const getCurrentUser = (req, res) => {
   const userId = req.user._id;
@@ -32,9 +19,6 @@ const getCurrentUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  if(req.method === "POST"){
-
-
     console.log(req.body)
     const { name, avatar, email, password} = req.body;
 
@@ -42,7 +26,7 @@ const createUser = (req, res) => {
       return sendError(BAD_REQUEST,{ message: `Missing required fields: [ ${!name?"name, ":""}${!avatar?"avatar, ":""}${!email?"email, ":""}${!password?"password ":""}]` }, res);
     }
 
-      User.findOne({email})
+    return  User.findOne({email})
       .then((user)=>{
         if (user) {
           const error = new Error('User with this email already exists');
@@ -51,13 +35,9 @@ const createUser = (req, res) => {
         }
         return bcrypt.hash(password, 10);
         })
-      .then(hashPassword =>{
-        return User.create({ name, avatar , email, password: hashPassword})
-          .then(user => res.status(201).send(user))
-          .catch(error =>errorCreationHandeling(error, res));
-      })
-      .catch(error=>errorHandeling(error, res));
-  }
+      .then(hashPassword => User.create({ name, avatar , email, password: hashPassword}))
+      .then(user => res.status(201).send(user))
+      .catch(error =>errorCreationHandeling(error, res));
 }
 
 const login = (req, res) => {
@@ -89,4 +69,4 @@ const updateCurrentUser = (req, res) => {
     .catch(error => errorHandeling(error, res));
 };
 
-module.exports = { /*getUsers, getUser,*/ createUser, login, getCurrentUser, updateCurrentUser};
+module.exports = { createUser, login, getCurrentUser, updateCurrentUser};

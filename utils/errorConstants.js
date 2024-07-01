@@ -4,6 +4,7 @@ const DEFAULT = 500;
 const USER_ALREADY_EXIST = 409;
 const UNATHORIZED = 401;
 const FORBIDDEN = 403
+const CONFLICT = 409
 
 module.exports = {
   BAD_REQUEST,
@@ -12,4 +13,5 @@ module.exports = {
   USER_ALREADY_EXIST,
   UNATHORIZED,
   FORBIDDEN,
+  CONFLICT,
 }
