@@ -1,38 +1,36 @@
-const { sendError, errorCreationHandeling, errorHandeling} = require("../utils/errors")
-const { DEFAULT,FORBIDDEN } = require("../utils/errorConstants");
+const { ForbiddenError } = require("../utils/errors")
 const ClothingItem = require("../models/clothingitems");
 
 
-const getItems = (req, res) => {
+const getItems = (req, res, next) => {
   ClothingItem.find()
     .then(items => res.send(items))
-    .catch(error => sendError(DEFAULT, error, res));
+    .catch(next);
 };
 
-const createItem = (req, res) => {
+const createItem = (req, res, next) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
   ClothingItem.create({ name, weather, imageUrl, owner })
     .then(item => res.status(201).send(item))
-    .catch(error => errorCreationHandeling(error, res));
+    .catch(next);
 };
 
-const deleteItem = (req, res) => {
+const deleteItem = (req, res, next) => {
 
   ClothingItem.findById(req.params.id)
   .orFail()
     .then(item=>{
       if(!item.owner.equals(req.user._id))
-        return sendError(FORBIDDEN, 'Forbidden: You do not have permission to delete this item', res)
+        throw new ForbiddenError('Forbidden: You do not have permission to delete this item')
 
       return ClothingItem.findByIdAndDelete(req.params.id)
         .then(()=> res.send({ message: 'Item deleted successfully' }))
     })
-    .catch(error => errorHandeling(error, res));
+    .catch(next);
 };
 
-const likeItem = (req, res) =>{
-  console.log("like");
+const likeItem = (req, res, next) =>{
   ClothingItem.findByIdAndUpdate(
     req.params.id,
     { $addToSet: { likes: req.user._id } }, // add _id to the array if it's not there yet
@@ -40,10 +38,10 @@ const likeItem = (req, res) =>{
   )
   .orFail()
   .then(item => res.send(item))
-  .catch(error => errorHandeling(error, res));
+  .catch(next);
 }
 
-const dislikeItem = (req, res) => {
+const dislikeItem = (req, res, next) => {
   ClothingItem.findByIdAndUpdate(
     req.params.id,
     { $pull: { likes: req.user._id } }, // remove _id from the array
@@ -51,7 +49,7 @@ const dislikeItem = (req, res) => {
   )
   .orFail()
   .then(item => res.send(item))
-  .catch(error => errorHandeling(error, res));
+  .catch(next);
 }
 
 module.exports = { getItems, createItem, deleteItem, likeItem, dislikeItem };

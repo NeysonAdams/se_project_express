@@ -5,10 +5,12 @@ const userRouter = require("./users");
 const clothingsRouter = require("./clothingitems");
 const {getItems} = require("../controllers/clothingitems")
 
+const { validateCreateUser, validateLogin } = require('../middlewares/validation');
 
 
-router.post('/signin', login);
-router.post('/signup', createUser);
+
+router.post('/signin', validateLogin, login);
+router.post('/signup', validateCreateUser, createUser);
 router.get("/items", getItems);
 
 router.use(auth);
