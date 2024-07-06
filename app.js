@@ -7,7 +7,7 @@ const mainRouter = require("./routes/index");
 const {errorHandler} = require('./middlewares/error-handler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { BadRequestError } = require("./utils/errors");
+const { NotFoundError } = require("./utils/errors");
 
 const app = express();
 const {PORT = 3001} = process.env
@@ -29,11 +29,11 @@ mongoose.connect('mongodb://127.0.0.1:27017/wtwr_db', {
 app.use(requestLogger);
 app.use("/", mainRouter);
 
+app.use((req, res, next) => {
+  next(new NotFoundError('Requested resource not found'));
+});
 
 app.use(errorLogger);
-app.use((req, res, next) => {
-  next(new BadRequestError('Requested resource not found'));
-});
 app.use(errors());
 app.use(errorHandler);
 app.listen(PORT, ()=>{
