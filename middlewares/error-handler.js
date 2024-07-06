@@ -1,18 +1,18 @@
 const { BadRequestError, UnauthorizedError, NotFoundError} = require('../utils/errors');
 
 const errorHandler = (err, req, res, next) => {
-  console.error(err.stack);
+  let error = err;
 
-  if (err.message === "Invalid email or password") {
-    err = new UnauthorizedError('Invalid email or password');
-  } else if (err.name === 'DocumentNotFoundError') {
-    err = new NotFoundError('Document not found');
-  } else if (err.name === 'CastError' || err.name === 'ValidationError') {
-    err = new BadRequestError(err.message);
+  if (error.message === "Invalid email or password") {
+    error = new UnauthorizedError('Invalid email or password');
+  } else if (error.name === 'DocumentNotFoundError') {
+    error = new NotFoundError('Document not found');
+  } else if (error.name === 'CastError' || error.name === 'ValidationError') {
+    error = new BadRequestError(error.message);
   }
 
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
+  const statusCode = error.statusCode || 500;
+  const message = error.message || 'Internal Server Error';
 
 
 

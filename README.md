@@ -66,3 +66,7 @@ WTWR is a web application designed to help users decide what to wear based on th
 2. Register a new user via POST /signup.
 3. Authenticate the user via POST /signin to receive a JWT token.
 4. Use the JWT token in the Authorization header to access protected routes.
+
+## Links
+ - [Front End](https://www.ttnewwtwr.jumpingcrab.com)
+ - [Back End](https://api.ttnewwtwr.jumpingcrab.com/)
